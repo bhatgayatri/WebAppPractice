@@ -1,79 +1,27 @@
 pipeline{
 	tools{
-	maven 'M2_HOME'
+		maven 'M2_HOME'
 		jdk 'JAVA_HOME'
-	      }
+	}
 	agent {
     		node {
-	    		label ''
-    			}
-  		}
+			label ''
+    		}
+  	}
 	stages{
-           stage('Checkout Stage'){
-		   steps{
-			   cleanWs()
-                  git url: 'https://github.com/bhatgayatri/my-app.git'
-			   bat 'mvn validate'
-                 bat 'mvn clean'
-		      
-	       	}
-          	}
-	
-    
-	  stage('Compile Stage'){
-	       steps{
-		       bat 'mvn compile'
-		       bat 'mvn test-compile'
-	       }
-             }
-		stage('self phase'){
-	       steps{
-		       bat 'mvn process-test-resources'
-	       }
-             }
-		
-          stage('Static Code Analysis Stage'){
-	        steps{
-	         	bat 'mvn sonar:sonar -Dsonar.host.url=http://52.172.158.204:9000/sonar/'
-		     }
-	 	}
-	  stage('Testing Stage'){
-	        steps{
-		  		bat 'mvn test'
-				bat 'mvn surefire:test'
-	     	  	        junit 'target/surefire-reports/*.xml'
-			      
-	      	             }
+        	stage('Checkout Stage'){
+			steps{
+				cleanWs()
+				git url: 'https://github.com/bhatgayatri/WebAppPractice.git'
+				bat 'mvn validate'
+				bat 'mvn clean'
 			}
-           stage('Code Coverage Test'){
-		  steps{
-				bat 'mvn cobertura:cobertura'
-			        bat 'mvn site'
-			        cobertura coberturaReportFile: 'target/site/cobertura/coverage.xml'
-		  }
-	   }
-		stage('Performance Testing'){
-		  	steps{
-		           	   bat 'mvn verify'
-	                   	}
-	           	}
-		   stage('Package'){
-          		steps{
-				bat 'mvn war:war'
+        	}
+	   	stage('Compile Stage'){
+			steps{
+				bat 'mvn compile'
+				bat 'mvn test-compile'
 			}
-		}
-		stage('Deploy')
-		{
-		  steps{
-				bat 'mvn deploy'
-			}
-		}
-		
-		stage('Functional Testing'){
-          		steps{
-				bat 'mvn integration-test'
-			}
-		}
-		
-   }
-}
+        	}
+	}
+}	
