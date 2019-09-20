@@ -1,14 +1,15 @@
 pipeline{
 	tools{
-	maven 'M2_HOME'
+		maven 'M2_HOME'
 		jdk 'JAVA_HOME'
-	      }
+	}
 	agent {
     		node {
-	    		label ''
-    			}
-  		}
+			label ''
+    		}
+  	}
 	stages{
+<<<<<<< HEAD
            stage('Checkout Stage'){
 		   steps{
 			   cleanWs()
@@ -44,36 +45,21 @@ pipeline{
 	     	  	        junit 'target/surefire-reports/*.xml'
 			      
 	      	             }
+=======
+        	stage('Checkout Stage'){
+			steps{
+				cleanWs()
+				git url: 'https://github.com/bhatgayatri/WebAppPractice.git'
+				bat 'mvn validate'
+				bat 'mvn clean'
+>>>>>>> e58b1aa7c532f8f6569845f658415500f4209bba
 			}
-           stage('Code Coverage Test'){
-		  steps{
-				bat 'mvn cobertura:cobertura'
-			        bat 'mvn site'
-			        cobertura coberturaReportFile: 'target/site/cobertura/coverage.xml'
-		  }
-	   }
-		stage('Performance Testing'){
-		  	steps{
-		           	   bat 'mvn verify'
-	                   	}
-	           	}
-		   stage('Package'){
-          		steps{
-				bat 'mvn war:war'
+        	}
+	   	stage('Compile Stage'){
+			steps{
+				bat 'mvn compile'
+				bat 'mvn test-compile'
 			}
-		}
-		stage('Deploy')
-		{
-		  steps{
-				bat 'mvn deploy'
-			}
-		}
-		
-		stage('Functional Testing'){
-          		steps{
-				bat 'mvn integration-test'
-			}
-		}
-		
-   }
-}
+        	}
+	}
+}	
